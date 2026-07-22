@@ -89,10 +89,12 @@ func main() {
 
 	router.Mount("/v1", v1Router)
 	srv := &http.Server{
-		Addr:    ":" + port,
-		Handler: router,
+		Addr:              ":" + port,
+		Handler:           router,
+		ReadHeaderTimeout: 3 * time.Second, // Fixes G112
 	}
 
-	log.Printf("Serving on port: %s\n", port)
+	escapedPort := strings.NewReplacer("\n", "", "\r", "").Replace(port)
+	log.Printf("Serving on port: %s\n", escapedPort) // Fixes G706
 	log.Fatal(srv.ListenAndServe())
 }
