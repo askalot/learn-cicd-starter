@@ -34,5 +34,5 @@ jobs:
         with:
           go-version: "1.26.0"
 
-      - name: Run Go formatting
-        run: test -z "$(gofmt -l .)"
+      - name: Check formatting
+        run: test -z $(go fmt ./...)
