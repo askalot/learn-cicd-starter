@@ -96,9 +96,12 @@ func main() {
 		ReadHeaderTimeout: 3 * time.Second, // Fixes G112
 	}
 
-	if _, err := strconv.Atoi(port); err != nil {
-		log.Fatalf("Invalid port configured: %s", port)
+	// Replace lines 99-103 with this:
+	portInt, err := strconv.Atoi(port)
+	if err != nil {
+		log.Fatal("Invalid port configured: numeric value required") // Fixes line 100 (No variables)
 	}
-	log.Printf("Serving on port: %s\n", port)
+
+	log.Printf("Serving on port: %d\n", portInt) // Fixes line 102 (Uses safe integer)
 	log.Fatal(srv.ListenAndServe())
 }
