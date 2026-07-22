@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
+	"strconv"
 	"time"
 
 	"github.com/go-chi/chi"
@@ -96,7 +96,9 @@ func main() {
 		ReadHeaderTimeout: 3 * time.Second, // Fixes G112
 	}
 
-	escapedPort := strings.NewReplacer("\n", "", "\r", "").Replace(port)
-	log.Printf("Serving on port: %s\n", escapedPort) // Fixes G706
+	if _, err := strconv.Atoi(port); err != nil {
+		log.Fatalf("Invalid port configured: %s", port)
+	}
+	log.Printf("Serving on port: %s\n", port)
 	log.Fatal(srv.ListenAndServe())
 }
