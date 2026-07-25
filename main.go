@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
+	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
@@ -89,10 +91,17 @@ func main() {
 
 	router.Mount("/v1", v1Router)
 	srv := &http.Server{
-		Addr:    ":" + port,
-		Handler: router,
+		Addr:              ":" + port,
+		Handler:           router,
+		ReadHeaderTimeout: 3 * time.Second, // Fixes G112
 	}
 
-	log.Printf("Serving on port: %s\n", port)
+	// Replace lines 99-103 with this:
+	portInt, err := strconv.Atoi(port)
+	if err != nil {
+		log.Fatal("Invalid port configured: numeric value required") // Fixes line 100 (No variables)
+	}
+
+	log.Printf("Serving on port: %d\n", portInt) // Fixes line 102 (Uses safe integer)
 	log.Fatal(srv.ListenAndServe())
 }
